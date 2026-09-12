@@ -18,8 +18,11 @@ scrape_configs:
     static_configs:
       - targets: ["ng4ocswkog8cg8ogc808o4ko:3000"]
 
-  # Cloudflare Tunnel (host systemd service)
-  # Requires cloudflared --metrics 0.0.0.0:20241 so Docker can reach it.
+  # Cloudflare Tunnel (host systemd service).
+  # 172.17.0.1 is docker0 — the Linux host from a Coolify/Docker container.
+  # host.docker.internal is not injected by Coolify. Connect To Predefined
+  # Network only reaches other Coolify containers, not host systemd units.
+  # Requires TUNNEL_METRICS=0.0.0.0:20241 on the cloudflared unit.
   - job_name: cloudflared
     static_configs:
-      - targets: ["host.docker.internal:20241"]
+      - targets: ["172.17.0.1:20241"]
